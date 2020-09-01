@@ -7,10 +7,10 @@ const errorHandler = (err, req, res, next) => {
 
   error.message = err.message
 
-  //Log to console for dev
+  // Log to console for dev
   console.log(err.red);
 
-  //Mongoose bad objectId (customised error resopnse)
+  // Mongoose bad objectId (customised error resopnse)
   if (err.name == 'CastError') {
     const message = `Bootcamp not found with id of ${err.value}`;
     error = new ErrorResponse(message, 404)
@@ -22,7 +22,13 @@ const errorHandler = (err, req, res, next) => {
     error = new ErrorResponse(message, 400);
   }
 
-  //  error response
+  //Mongoose validation error
+  if (err.name === 'ValidationError') {
+    const message = Object.values(err.errors).map(val => val.message);
+    error = new ErrorResponse(message, 400);
+  }
+
+  // Error response
   res.status(error.statusCode || 500).json({
     success: false,
     error: error.message || 'Server Error'
