@@ -8,14 +8,14 @@ const errorHandler = (err, req, res, next) => {
   error.message = err.message
 
   //Log to console for dev
-  // console.log(err);
+  console.log(err.red);
 
-  //Mongoose bad objectId
+  //Mongoose bad objectId (customised error resopnse)
   if (err.name == 'CastError') {
     const message = `Bootcamp not found with id of ${err.value}`;
     error = new ErrorResponse(message, 404)
   }
-
+  //  error response
   res.status(error.statusCode || 500).json({
     success: false,
     error: error.message || 'Server Error'
