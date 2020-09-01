@@ -29,7 +29,8 @@ if (process.env.NODE_ENV == "development") {
 //Mount routers
 app.use("/api/v1/bootcamps", bootcamps);
 
-//errorHandler must put after Mount rounters
+//when call next(err) 
+//to use the errorHandler function, it must be put after Mount rounters
 app.use(errorHandler);
 
 app.get("/", (req, res) => {
