@@ -15,6 +15,7 @@ connectDB();
 
 //Route files
 const bootcamps = require("./routes/bootcamps.js");
+const courses = require("./routes/courses.js");
 
 const app = express();
 
@@ -28,6 +29,7 @@ if (process.env.NODE_ENV == "development") {
 
 //Mount routers
 app.use("/api/v1/bootcamps", bootcamps);
+app.use("/api/v1/courses", courses);
 
 //when call next(err) 
 //to use the errorHandler function, it must be put after Mount rounters
