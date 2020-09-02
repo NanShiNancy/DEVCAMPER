@@ -32,7 +32,7 @@ exports.getBootcamps = asyncHandler(async (req, res, next) => {
 
   //Finding resource
   //https://docs.mongodb.com/manual/reference/operator/query/gt/
-  query = Bootcamp.find(JSON.parse(queryStr));
+  query = Bootcamp.find(JSON.parse(queryStr)).populate('courses');
 
 
   // Select fields
@@ -52,18 +52,17 @@ exports.getBootcamps = asyncHandler(async (req, res, next) => {
 
   // Pagination
   const page = parseInt(req.query.page, 10) || 1;
-  const limit = parseInt(req.query.limit, 10) || 2;
+  const limit = parseInt(req.query.limit, 10) || 4;
   const startIndex = (page - 1) * limit;
   const endIndex = page * limit;
   const total = await Bootcamp.countDocuments();
 
   query = query.skip(startIndex).limit(limit);
-  console.log('1');
-  console.log(query);
+
+
   // Executing query
   const bootcamps = await query;
-  console.log('2');
-  console.log(bootcamps);
+
   //Pagination result
   const pagination = {};
 
@@ -115,7 +114,9 @@ exports.createBootcamp = asyncHandler(async (req, res, next) => {
   const bootcamp = await Bootcamp.create(req.body);
   res.status(201).json({
     success: true,
-    data: bootcamp
+    data: {
+      bootcamp
+    }
   });
 });
 
@@ -143,16 +144,20 @@ exports.updateBootcamp = asyncHandler(async (req, res, next) => {
 //@route    DELETE /api/v1/bootcamps/:id
 //@access   Private
 exports.deleteBootcamp = asyncHandler(async (req, res, next) => {
-  const bootcamp = await Bootcamp.findByIdAndDelete(req.params.id);
+  const bootcamp = await Bootcamp.findById(req.params.id);
   if (!bootcamp) {
     return next(
       //customised error response
       new ErrorResponse(`Bootcamp not found with id of ${req.params.id}`, 404)
     );
   }
+
+  // Triger cascade delete middleware in the models-bootcamp
+  bootcamp.remove();
+
   res.status(200).json({
     success: true,
-    data: bootcamp
+    data: {}
   });
 });
 
