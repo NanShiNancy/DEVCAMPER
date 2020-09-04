@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const { model } = require("./Bootcamp");
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 
 const userSchema = new mongoose.Schema({
 	name: {
@@ -41,5 +42,14 @@ userSchema.pre("save", async function (next) {
 	this.password = await bcrypt.hash(this.password, salt);
 	next();
 });
+
+//Sign JWT and return
+//jwt.io
+//https://github.com/auth0/node-jsonwebtoken
+userSchema.methods.getSignedJwtToken = function () {
+	return jwt.sign({ id: this._id }, process.env.JWT_SECRET, {
+		expiresIn: process.env.JWT_EXPIRE,
+	});
+};
 
 module.exports = mongoose.model("User", userSchema);
