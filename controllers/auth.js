@@ -43,11 +43,10 @@ exports.login = asyncHandler(async (req, res, next) => {
 
   // Check for user and add password to email
   // In the model-user: password: {	select: false, }
+
   const user = await User.findOne({
     email
   }).select('+password'); //now-----password: { select: password}
-
-  console.log(user);
 
   if (!user) {
     return next(new ErrorResponse('Invalid credentials', 401));
@@ -83,3 +82,16 @@ const sendTokenResponse = (user, statusCode, res) => {
   });
 
 }
+
+//@desc     Get current logged in user
+//@route    POST /api/v1/auth/me
+//@access   Private
+
+exports.getMe = asyncHandler(async (req, res, next) => {
+  const user = await User.findById(req.user.id);
+
+  res.status(200).json({
+    success: true,
+    data: user
+  });
+})
