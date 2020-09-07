@@ -9,7 +9,12 @@ const User = require("../models/user");
 //@access   Public
 
 exports.register = asyncHandler(async (req, res, next) => {
-	const { name, email, password, role } = req.body;
+	const {
+		name,
+		email,
+		password,
+		role
+	} = req.body;
 
 	// Create user
 	const user = await User.create({
@@ -27,7 +32,10 @@ exports.register = asyncHandler(async (req, res, next) => {
 //@access   Public
 
 exports.login = asyncHandler(async (req, res, next) => {
-	const { email, password } = req.body;
+	const {
+		email,
+		password
+	} = req.body;
 
 	// Validate email & password
 	if (!email || !password) {
@@ -40,6 +48,8 @@ exports.login = asyncHandler(async (req, res, next) => {
 	const user = await User.findOne({
 		email,
 	}).select("+password"); //now-----password: { select: password}
+
+
 
 	if (!user) {
 		return next(new ErrorResponse("Invalid credentials", 401));
@@ -67,6 +77,29 @@ exports.getMe = asyncHandler(async (req, res, next) => {
 		data: user,
 	});
 });
+
+//@desc     Update user details
+//@route    PUT /api/v1/auth/updatedetails
+//@access   Private
+
+exports.updateDetails = asyncHandler(async (req, res, next) => {
+	const fieldsToUpdate = {
+		name: req.body.name,
+		email: req.body.email
+	}
+
+	const user = await User.findByIdAndUpdate(req.user.id, fieldsToUpdate, {
+		new: true,
+		runValidators: true
+	});
+
+	res.status(200).json({
+		success: true,
+		data: user,
+	});
+});
+
+
 
 //@desc     Forgot password
 //@route    POST /api/v1/auth/forgotpassword
@@ -130,34 +163,34 @@ exports.forgotPassword = asyncHandler(async (req, res, next) => {
 //@access   Public
 
 exports.resetPassword = asyncHandler(async (req, res, next) => {
-  // Get hashed token 
-  const resetPasswordToken = crypto.createHash('sha256').update(req.params.resettoken).digest('hex');
+	// Get hashed token 
+	const resetPasswordToken = crypto.createHash('sha256').update(req.params.resettoken).digest('hex');
 
-  const user = await User.findOne({
-    resetPasswordToken,
-    resetPasswordExpire: {
-      $gt: Date.now()
-    }
-  });
-  // console.log(user);
-  if (!user) {
-    return next(new ErrorResponse('Invalid token', 400));
-  }
+	const user = await User.findOne({
+		resetPasswordToken,
+		resetPasswordExpire: {
+			$gt: Date.now()
+		}
+	});
+	// console.log(user);
+	if (!user) {
+		return next(new ErrorResponse('Invalid token', 400));
+	}
 
-  // Set new password
-  user.password = req.body.password;
-  // console.log(user);
-  user.resetPasswordToken = undefined;
-  user.resetPasswordExpire = undefined;
-  await user.save();
-  // console.log(user);
-  sendTokenResponse(user, 200, res);
+	// Set new password
+	user.password = req.body.password;
+	// console.log(user);
+	user.resetPasswordToken = undefined;
+	user.resetPasswordExpire = undefined;
+	await user.save();
+	// console.log(user);
+	sendTokenResponse(user, 200, res);
 
 })
 
 // Get token from model, create cookie and send response
 const sendTokenResponse = (user, statusCode, res) => {
-  // console.log('aabb');
+	// console.log('aabb');
 	// Create token
 	const token = user.getSignedJwtToken();
 
