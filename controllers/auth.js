@@ -1,3 +1,4 @@
+const crypto = require('crypto');
 const ErrorResponse = require("../utils/errorResponse");
 const asyncHandler = require("../middleware/async");
 const sendEmail = require("../utils/sendEmail");
@@ -123,8 +124,40 @@ exports.forgotPassword = asyncHandler(async (req, res, next) => {
 	});
 });
 
+
+//@desc     Reset password
+//@route    PUT /api/v1/resetpassword/:resettoken
+//@access   Public
+
+exports.resetPassword = asyncHandler(async (req, res, next) => {
+  // Get hashed token 
+  const resetPasswordToken = crypto.createHash('sha256').update(req.params.resettoken).digest('hex');
+
+  const user = await User.findOne({
+    resetPasswordToken,
+    resetPasswordExpire: {
+      $gt: Date.now()
+    }
+  });
+  // console.log(user);
+  if (!user) {
+    return next(new ErrorResponse('Invalid token', 400));
+  }
+
+  // Set new password
+  user.password = req.body.password;
+  // console.log(user);
+  user.resetPasswordToken = undefined;
+  user.resetPasswordExpire = undefined;
+  await user.save();
+  // console.log(user);
+  sendTokenResponse(user, 200, res);
+
+})
+
 // Get token from model, create cookie and send response
 const sendTokenResponse = (user, statusCode, res) => {
+  // console.log('aabb');
 	// Create token
 	const token = user.getSignedJwtToken();
 
