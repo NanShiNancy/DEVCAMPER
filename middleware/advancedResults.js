@@ -22,7 +22,6 @@ const advancedResults = (model, populate) => async (req, res, next) => {
   //https://docs.mongodb.com/manual/reference/operator/query/gt/
   query = model.find(JSON.parse(queryStr));
 
-
   // Select fields
   //https://mongoosejs.com/docs/queries.html
   if (req.query.select) {
@@ -70,6 +69,7 @@ const advancedResults = (model, populate) => async (req, res, next) => {
       limit
     };
   }
+  // console.log(results);
 
   res.advancedResults = {
     success: true,

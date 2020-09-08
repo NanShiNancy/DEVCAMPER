@@ -21,6 +21,7 @@ const bootcamps = require("./routes/bootcamps.js");
 const courses = require("./routes/courses.js");
 const auth = require('./routes/auths');
 const users = require('./routes/users');
+const reviews = require('./routes/reviews');
 
 const app = express();
 
@@ -46,6 +47,7 @@ app.use("/api/v1/bootcamps", bootcamps);
 app.use("/api/v1/courses", courses);
 app.use("/api/v1/auth", auth);
 app.use("/api/v1/users", users);
+app.use("/api/v1/reviews", reviews);
 
 //when call next(err) 
 //to use the errorHandler function, it must be put after Mount rounters
