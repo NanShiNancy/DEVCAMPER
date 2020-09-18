@@ -4,7 +4,7 @@
 	"description": "Devcamper backend API",
 	"main": "server.js",
 	"scripts": {
-		"start": "pm2-runtime start server.js",
+		"start": "pm2-runtime start ecosystem.config.js",
 		"dev": "nodemon server"
 	},
 	"author": "Nan Shi",
