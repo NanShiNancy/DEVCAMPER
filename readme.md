@@ -1,10 +1,12 @@
 # DevCmper API
 
 > Backend API for DevCamper application, which is a bootcamp directory website
+> https://documenter.getpostman.com/view/7982596/TVCmRQRm
 
 ## Usage
+MongoDB connection: 
+Rename "config/config.env.env" to "config/config.env" and update the values/settings to your own 
 
-Rename "config/config.env.env" to "config/config.env" and update the values/settings to your own
 
 ## Install Dependencies
 
