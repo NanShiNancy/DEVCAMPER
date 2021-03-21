@@ -1,9 +1,12 @@
 <!doctype html>
 <html lang=en>
 <meta charset=utf-8>
-<meta http-equiv=x-ua-compatible content="ie=edge">
+
 <meta http-equiv="Content-Security-Policy"
-  content="script-src 'self' 'unsafe-inline' 'unsafe-hashes' 'sha256-mWAYT8yLpZWtXAaZMSNsT5E/MPgTLVSjcfBBrZsAwPk='; object-src 'self' ">
+  content="default-src *; style-src 'self' http://* 'unsafe-inline'; script-src 'self' http://* 'unsafe-inline' 'unsafe-eval' 'sha256-mWAYT8yLpZWtXAaZMSNsT5E/MPgTLVSjcfBBrZsAwPk='" />
+
+<meta http-equiv=x-ua-compatible content="ie=edge">
+
 <meta name=viewport content="width=device-width,initial-scale=1">
 <title>DevCamper API
   &nbsp;|&nbsp;
@@ -15,6 +18,8 @@
   /*!normalize.css v3.0.3 | MIT License | github.com/necolas/normalize.css*/
   html {
     font-family: sans-serif;
+    font-size: 24px;
+    color: red !important;
     -webkit-text-size-adjust: 100%;
     -ms-text-size-adjust: 100%
   }
